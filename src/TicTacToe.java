@@ -18,22 +18,40 @@ public class TicTacToe {
             int col;
             int row;
             player = "X";
+            boolean valid;
+            boolean tie = false;
             do {
+                play = false;
                 display();
-                col = SafeInput.getRangedInt(in, "Enter what column you want to move in", 0, 2);
-                row = SafeInput.getRangedInt(in, "Enter what column you want to move in", 0, 2);
-                board[col][row] = player;
-                System.out.println(board[col][row]);
-
-                if (player == "X")
+                do {
+                    row = SafeInput.getRangedInt(in, "Enter what row you want to move in", 1, 3);
+                    col = SafeInput.getRangedInt(in, "Enter what column you want to move in", 1, 3);
+                    row = row - 1;
+                    col = col - 1;
+                    valid = isValidMove(col, row);
+                } while (!valid);
+                move = move + 1;
+                System.out.println("Move " + move);
+                if (move % 2 == 0)
                 {
-                    player = "Y";
+                    board[col][row] = "Y";
                 }
                 else
                 {
-                    player = "X";
+                    board[col][row] = "X";
                 }
-            } while (isValidMove(row, col));
+                if (isWin(player) == true)
+                {
+                    System.out.println("Player " + player + " has won.");
+                    win = true;
+                }
+                else if (isTie() == true)
+                {
+                    System.out.println("It is a tie.");
+                    tie = true;
+                }
+            } while (!win || !tie);
+            play = SafeInput.getYNConfirm(in, "Play again? Y/N");
         }
         while (play);
 
@@ -43,22 +61,30 @@ public class TicTacToe {
     private static void clearBoard() {
         for (int row = 0; row < ROW; row++) {
             for (int col = 0; col < COL; col++) {
-                board[row][col] = " ";
+                board[col][row] = " ";
             }
         }
     } //sets board elements to a space
 
     private static void display() {
-        for (int row = 0; row < ROW; row++) {
-            for (int col = 0; col < COL; col++) {
-                System.out.println(board[row][col] + " | ");
-            }
-        }
+        System.out.println(board[0][0] + "|" + board[1][0] + "|" + board[2][0]);
+        System.out.println("-----");
+        System.out.println(board[0][1] + "|" + board[1][1] + "|" + board[2][1]);
+        System.out.println("-----");
+        System.out.println(board[0][2] + "|" + board[1][2] + "|" + board[2][2]);
         in.nextLine();
     } //shows tictactoe game for next movement
 
-    private static boolean isValidMove(int row, int col) {
-        return board[row][col].equals(" ");
+    private static boolean isValidMove(int col, int row) {
+        if (board[col][row].equals(" "))
+        {
+            return true;
+        }
+        else
+        {
+            System.out.println("Not a legal move, please enter a legal move.");
+            return false;
+        }
     }
 
     private static boolean isWin(String player) {

@@ -87,7 +87,6 @@ public class SafeInput {
                 pipe.nextLine();
             }
             if (userInt >= lo && userInt <= hi && done) {
-                System.out.println("You have entered a number " + userInt + " that is in range.");
             } else if (!done) {
 
             } else {
